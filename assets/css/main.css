@@ -241,11 +241,17 @@ h1, h2, h3 { font-weight: 600; color: var(--ink); line-height: 1.15; }
 /* ---------- big photo panel ---------- */
 
 .photo-panel { padding: 128px 0; }
-.photo-panel .frame {
+.frame {
   border-radius: 24px;
   overflow: hidden;
 }
-.photo-panel .frame img { width: 100%; height: auto; }
+.frame img { width: 100%; height: auto; }
+
+/* media placed inside a page hero, directly under the title */
+.page-hero .hero-media { margin-top: 72px; }
+.page-hero.with-media {
+  background: linear-gradient(180deg, var(--bone-soft) 0%, var(--white) 70%);
+}
 .photo-caption {
   display: flex;
   justify-content: space-between;
