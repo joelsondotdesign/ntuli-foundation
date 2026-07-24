@@ -215,7 +215,8 @@ h1, h2, h3 { font-weight: 600; color: var(--ink); line-height: 1.15; }
 .page-hero .display { margin-bottom: 22px; }
 .page-hero p.lead { max-width: 620px; }
 .page-hero.centered { text-align: center; }
-.page-hero.centered p.lead { margin: 0 auto; }
+.page-hero.centered p.lead { margin: 0 auto; max-width: none; }
+.page-hero.no-pb { padding-bottom: 0; }
 
 /* the inner-page nav sits on the gradient */
 .page-hero-wrap { background: linear-gradient(180deg, var(--bone-soft) 0%, rgba(247, 241, 228, 0) 60%); }
