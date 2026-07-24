@@ -46,9 +46,18 @@
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.12 }
     );
-    revealEls.forEach(function (el) { io.observe(el); });
+    revealEls.forEach(function (el) {
+      /* anything already in (or above) the first viewport shows instantly —
+         the observer only animates content scrolled into view later */
+      var r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.95) {
+        el.classList.add("is-in");
+      } else {
+        io.observe(el);
+      }
+    });
   } else {
     revealEls.forEach(function (el) { el.classList.add("is-in"); });
   }
@@ -99,28 +108,32 @@
       );
   }
 
-  /* Six commitments: cards fade to full opacity while pinned. */
+  /* Six commitments: the section pins and the highlight walks down the
+     list, lighting one row at a time as the user scrolls. */
   var commitments = document.querySelector(".commitments");
   if (commitments && !reducedMotion) {
-    var cards = commitments.querySelectorAll(".commit-card");
+    var rows = commitments.querySelectorAll(".commit-row");
     var ctl = gsap.timeline({
       scrollTrigger: {
         trigger: commitments,
         start: "top top",
-        end: "+=" + (cards.length * 260),
+        end: "+=" + (rows.length * 280),
         pin: true,
         scrub: 0.6,
         anticipatePin: 1
       }
     });
-    cards.forEach(function (card, i) {
-      ctl.to(card, { opacity: 1, ease: "none", duration: 1 }, i * 0.85);
+    rows.forEach(function (row, i) {
+      ctl.to(row, { opacity: 1, ease: "none", duration: 0.8 }, i);
+      if (i > 0) {
+        ctl.to(rows[i - 1], { opacity: 0.28, ease: "none", duration: 0.8 }, i);
+      }
     });
   }
 
   /* Reduced motion: show everything at rest. */
   if (reducedMotion) {
-    document.querySelectorAll(".commit-card").forEach(function (c) { c.style.opacity = 1; });
+    document.querySelectorAll(".commit-row").forEach(function (c) { c.style.opacity = 1; });
     var wm = document.querySelector(".portal-wordmark");
     if (wm) wm.style.opacity = 1;
     var oo = document.querySelector(".arch-ochre-overlay");
