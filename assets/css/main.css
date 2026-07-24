@@ -547,9 +547,9 @@ a.news-row:hover .go { transform: translateX(4px); }
 .team-section.on-bone { background: var(--bone); border-radius: 0; padding: 128px 0; }
 .team-section .eyebrow { font-size: 20px; margin-bottom: 36px; }
 .founders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-.people-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+.people-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
 .person img { width: 100%; aspect-ratio: 1035 / 739; object-fit: cover; }
-.people-grid .person img { aspect-ratio: 689 / 741; }
+.people-grid .person img { aspect-ratio: 1035 / 739; }
 .person h3 { font-size: 24px; margin: 24px 0 4px; }
 .person .role { color: var(--ochre); font-weight: 500; margin-bottom: 14px; }
 .person p.bio { font-size: 16px; }
