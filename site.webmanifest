@@ -1,0 +1,21 @@
+{
+  "name": "Ntuli Foundation",
+  "short_name": "Ntuli",
+  "description": "A South African cultural institution advancing African Indigenous Knowledge Systems through art, education and philosophy, founded on the work of Prof Pitika Ntuli.",
+  "start_url": "/",
+  "display": "browser",
+  "theme_color": "#2B2926",
+  "background_color": "#EDE4D0",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/img/favicon.png",
+      "sizes": "73x80",
+      "type": "image/png"
+    }
+  ]
+}
