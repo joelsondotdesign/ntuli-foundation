@@ -1,7 +1,8 @@
 /* ============================================================
-   Self-hosted Alegreya Sans (SIL Open Font License 1.1)
-   Embedded so typography renders identically on every machine —
-   no dependency on locally installed fonts or Google's CDN.
+   Self-hosted Alegreya Sans (SIL Open Font License 1.1) — FALLBACK ONLY.
+   FreightSans Pro (Adobe Fonts kit kew7yxz) is the site typeface; these
+   faces are only fetched by the browser if that kit fails to load, so
+   the site never drops to a system sans.
    ============================================================ */
 
 @font-face {

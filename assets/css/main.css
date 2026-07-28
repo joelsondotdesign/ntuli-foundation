@@ -2,7 +2,8 @@
    The Ntuli Foundation — main stylesheet
    Palette: white ground · bone #EDE4D0 · navy #1C2B49 ·
    ochre #C98B2D · ink #1E2126 · body #5A6172
-   Type: Alegreya Sans, self-hosted (see fonts.css)
+   Type: FreightSans Pro via Adobe Fonts kit kew7yxz;
+         self-hosted Alegreya Sans is the offline fallback
    ============================================================ */
 
 :root {
@@ -18,7 +19,7 @@
   --line: #e5dfd2;
   --line-light: #ece7db;
   --footer-bg: #171310;
-  --font: "Alegreya Sans", "Segoe UI", sans-serif;
+  --font: "freight-sans-pro", "Alegreya Sans", "Segoe UI", sans-serif;
   --container: 1240px;
   --gutter: clamp(24px, 5vw, 72px);
 }
