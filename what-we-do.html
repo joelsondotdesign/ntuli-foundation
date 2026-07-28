@@ -34,39 +34,38 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="manifest" href="site.webmanifest" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+  <link rel="preload" href="assets/fonts/alegreya-sans-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/alegreya-sans-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="assets/css/fonts.css" />
   <link rel="stylesheet" href="assets/css/main.css" />
 </head>
-<body>
+<body class="hero-tinted">
 
   <div class="loader" aria-hidden="true"><div class="arch-mark"></div></div>
 
-  <div class="page-hero-wrap">
-    <header class="nav">
-      <div class="container nav-inner">
-        <a class="nav-logo" href="index.html" aria-label="The Ntuli Foundation — home">
-          <img src="assets/img/logo.png" alt="The Ntuli Foundation" />
-        </a>
-        <nav class="nav-links" aria-label="Primary">
-          <a href="what-we-do.html" class="active">What we do</a>
-          <a href="our-team.html">Our team</a>
-          <a href="studio.html">Studio</a>
-          <a href="news.html">News</a>
-        </nav>
-        <a class="btn btn-outline" href="studio.html">Visit the studio</a>
-      </div>
-    </header>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="nav-logo" href="index.html" aria-label="The Ntuli Foundation — home">
+        <img src="assets/img/logo.png" alt="The Ntuli Foundation" />
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="what-we-do.html" class="active">What we do</a>
+        <a href="our-team.html">Our team</a>
+        <a href="studio.html">Studio</a>
+        <a href="archive.html">Archive</a>
+        <a href="news.html">News</a>
+      </nav>
+      <a class="btn btn-outline" href="studio.html">Visit the studio</a>
+    </div>
+  </header>
 
-    <section class="page-hero">
-      <div class="container">
-        <span class="eyebrow">What we do — The philosophy</span>
-        <h1 class="display">Knowledge, kept<br /><em>living and moving.</em></h1>
-        <p class="lead">The Ntuli Foundation is a public-benefit cultural and educational institution dedicated to African Indigenous Knowledge Systems. Our work spans art, heritage, research, education, and community engagement.</p>
-      </div>
-    </section>
-  </div>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">What we do — The philosophy</span>
+      <h1 class="display">Knowledge, kept<br /><em>living and moving.</em></h1>
+      <p class="lead">The Ntuli Foundation is a public-benefit cultural and educational institution dedicated to African Indigenous Knowledge Systems. Our work spans art, heritage, research, education, and community engagement.</p>
+    </div>
+  </section>
 
   <main>
 
@@ -136,7 +135,7 @@
     <section class="programmes">
       <div class="container">
         <span class="eyebrow">Programmes</span>
-        <h2 class="h2 navy">Seen through the door.</h2>
+        <h2 class="h2 navy">Seen through the portal.</h2>
         <div style="height:48px"></div>
         <div class="prog-grid">
           <div class="prog-card reveal">
@@ -187,6 +186,15 @@
       </div>
     </div>
   </footer>
+
+  <!-- Cookie notice -->
+  <aside class="cookie" role="region" aria-label="Cookie notice">
+    <p>We use a small number of cookies to understand how the site is used. Nothing is sold, and nothing is shared with advertisers.</p>
+    <div class="cookie-actions">
+      <button class="decline" data-choice="declined" type="button">Decline</button>
+      <button class="accept" data-choice="accepted" type="button">Accept</button>
+    </div>
+  </aside>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>

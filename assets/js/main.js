@@ -6,12 +6,45 @@
      (UbuSuSu portal merge + six commitments card fade), built with
      GSAP ScrollTrigger. Sections stay fixed until their animation
      completes, then release.
+   - Sticky navigation that gains a backdrop once the page scrolls.
+   - Cookie notice that slides in quietly, remembered in localStorage.
+   - Archive overlay: filterable grid, keyboard-navigable modal.
 */
 
 (function () {
   "use strict";
 
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- sticky nav ---------- */
+
+  var nav = document.querySelector(".nav");
+  if (nav) {
+    var onScroll = function () {
+      nav.classList.toggle("is-stuck", window.scrollY > 24);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+  }
+
+  /* ---------- cookie notice ---------- */
+
+  var cookie = document.querySelector(".cookie");
+  if (cookie) {
+    if (localStorage.getItem("ntuli-cookie-choice")) {
+      cookie.remove();
+    } else {
+      /* let the page settle before it drifts in */
+      setTimeout(function () { cookie.classList.add("is-in"); }, 1600);
+      cookie.addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-choice]");
+        if (!btn) return;
+        localStorage.setItem("ntuli-cookie-choice", btn.dataset.choice);
+        cookie.classList.remove("is-in");
+        setTimeout(function () { cookie.remove(); }, 700);
+      });
+    }
+  }
 
   /* ---------- first-load-only loader ---------- */
 

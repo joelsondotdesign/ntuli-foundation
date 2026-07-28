@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Our team | Ntuli Foundation</title>
-  <meta name="description" content="The keepers of the door: Prof Pitika Ntuli, Antoinette Ntuli, and the team carrying the Ntuli Foundation's work across art, heritage and education." />
+  <meta name="description" content="The keepers of the portal: Prof Pitika Ntuli, Antoinette Ntuli, and the team carrying the Ntuli Foundation's work across art, heritage and education." />
   <link rel="canonical" href="https://www.ntulifoundation.org/our-team.html" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="author" content="Ntuli Foundation" />
@@ -34,38 +34,37 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="manifest" href="site.webmanifest" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap" rel="stylesheet" />
+  <link rel="preload" href="assets/fonts/alegreya-sans-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/alegreya-sans-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="assets/css/fonts.css" />
   <link rel="stylesheet" href="assets/css/main.css" />
 </head>
-<body>
+<body class="hero-tinted">
 
   <div class="loader" aria-hidden="true"><div class="arch-mark"></div></div>
 
-  <div class="page-hero-wrap">
-    <header class="nav">
-      <div class="container nav-inner">
-        <a class="nav-logo" href="index.html" aria-label="The Ntuli Foundation — home">
-          <img src="assets/img/logo.png" alt="The Ntuli Foundation" />
-        </a>
-        <nav class="nav-links" aria-label="Primary">
-          <a href="what-we-do.html">What we do</a>
-          <a href="our-team.html" class="active">Our team</a>
-          <a href="studio.html">Studio</a>
-          <a href="news.html">News</a>
-        </nav>
-        <a class="btn btn-outline" href="studio.html">Visit the studio</a>
-      </div>
-    </header>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="nav-logo" href="index.html" aria-label="The Ntuli Foundation — home">
+        <img src="assets/img/logo.png" alt="The Ntuli Foundation" />
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="what-we-do.html">What we do</a>
+        <a href="our-team.html" class="active">Our team</a>
+        <a href="studio.html">Studio</a>
+        <a href="archive.html">Archive</a>
+        <a href="news.html">News</a>
+      </nav>
+      <a class="btn btn-outline" href="studio.html">Visit the studio</a>
+    </div>
+  </header>
 
-    <section class="page-hero centered no-pb">
-      <div class="container">
-        <h1 class="display">The keepers<br /><em>of the door.</em></h1>
-        <p class="lead">Custodians, makers, and scholars, the people who hold the<br />Foundation&rsquo;s work and carry it forward.</p>
-      </div>
-    </section>
-  </div>
+  <section class="page-hero centered no-pb">
+    <div class="container">
+      <h1 class="display">The keepers<br /><em>of the portal.</em></h1>
+      <p class="lead">Custodians, makers, and scholars, the people who hold the<br />Foundation&rsquo;s work and carry it forward.</p>
+    </div>
+  </section>
 
   <main>
 
@@ -140,6 +139,15 @@
       </div>
     </div>
   </footer>
+
+  <!-- Cookie notice -->
+  <aside class="cookie" role="region" aria-label="Cookie notice">
+    <p>We use a small number of cookies to understand how the site is used. Nothing is sold, and nothing is shared with advertisers.</p>
+    <div class="cookie-actions">
+      <button class="decline" data-choice="declined" type="button">Decline</button>
+      <button class="accept" data-choice="accepted" type="button">Accept</button>
+    </div>
+  </aside>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
