@@ -83,20 +83,23 @@
 
   </main>
 
-  <!-- Archive overlay -->
+  <!-- Archive overlay: the panel holds only the content; close, the
+       prev/next arrows and the counter sit on the darkened backdrop -->
   <div class="overlay" data-overlay aria-hidden="true" role="dialog" aria-modal="true" aria-label="Archive item">
     <div class="overlay-backdrop" data-overlay-close></div>
+    <button class="overlay-ctrl overlay-close" data-overlay-close type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
+    <button class="overlay-ctrl overlay-arrow prev" data-overlay-prev type="button" aria-label="Previous item">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 4l-8 8 8 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="overlay-ctrl overlay-arrow next" data-overlay-next type="button" aria-label="Next item">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4l8 8-8 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="overlay-count" data-overlay-count aria-live="polite"></span>
     <div class="overlay-panel">
-      <button class="overlay-close" data-overlay-close type="button" aria-label="Close">&#10005;</button>
       <div class="overlay-media" data-overlay-media></div>
       <div class="overlay-body" data-overlay-body></div>
-      <div class="overlay-foot">
-        <span class="overlay-count" data-overlay-count></span>
-        <div class="overlay-nav">
-          <button data-overlay-prev type="button"><span aria-hidden="true">&larr;</span> Previous</button>
-          <button data-overlay-next type="button">Next <span aria-hidden="true">&rarr;</span></button>
-        </div>
-      </div>
     </div>
   </div>
 

@@ -13,6 +13,8 @@
                { provider: "instagram", url: "…" } ← reel permalink
                omit entirely for a piece with no recording yet
      link      { href, label } optional outbound link
+     pdf       optional URL or path to a PDF of the full text — shown
+               as a prominent "Open the PDF" button in the overlay
    --------------------------------------------------------------- */
 
 var ARCHIVE = [
@@ -66,7 +68,7 @@ var ARCHIVE = [
   },
   {
     kind: "Video",
-    title: "Working the bone — inside the studio",
+    title: "Working the bone: inside the studio",
     meta: "Recording to be supplied",
     image: "assets/img/founder-pitika-grinder.webp",
     placeholder: true,
@@ -76,7 +78,7 @@ var ARCHIVE = [
   },
   {
     kind: "Video",
-    title: "On re-membering — a lecture on UBuSuSu",
+    title: "On re-membering: a lecture on UBuSuSu",
     meta: "Recording to be supplied",
     image: "assets/img/focus-global-culture-photo.png",
     placeholder: true,
@@ -86,7 +88,7 @@ var ARCHIVE = [
   },
   {
     kind: "Video",
-    title: "The teaching floor — learners in the studio",
+    title: "The teaching floor: learners in the studio",
     meta: "Recording to be supplied",
     image: "assets/img/focus-living-space-photo.jpg",
     placeholder: true,
@@ -193,6 +195,22 @@ var ARCHIVE = [
     return item.image ? '<img src="' + esc(item.image) + '" alt="" />' : "";
   }
 
+  function actionsMarkup(item) {
+    var actions = [];
+    if (item.pdf) {
+      actions.push(
+        '<a class="btn btn-dark" href="' + esc(item.pdf) + '" target="_blank" rel="noopener">Open the PDF <span aria-hidden="true">→</span></a>'
+      );
+    }
+    if (item.link) {
+      actions.push(
+        '<a class="btn btn-outline" href="' + esc(item.link.href) + '" target="_blank" rel="noopener">' +
+        esc(item.link.label) + ' <span aria-hidden="true">→</span></a>'
+      );
+    }
+    return actions.length ? '<div class="overlay-actions">' + actions.join("") + "</div>" : "";
+  }
+
   function open(i) {
     current = i;
     var item = visible[i];
@@ -206,10 +224,7 @@ var ARCHIVE = [
       '<div class="prose">' +
       (item.body || []).map(function (p) { return "<p>" + esc(p) + "</p>"; }).join("") +
       "</div>" +
-      (item.link
-        ? '<a class="btn btn-outline" style="margin-top:28px" href="' + esc(item.link.href) +
-          '" target="_blank" rel="noopener">' + esc(item.link.label) + ' <span aria-hidden="true">→</span></a>'
-        : "");
+      actionsMarkup(item);
 
     countSlot.textContent = i + 1 + " of " + visible.length;
     prevBtn.disabled = i === 0;
