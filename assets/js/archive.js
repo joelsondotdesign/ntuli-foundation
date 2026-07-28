@@ -9,7 +9,8 @@
      image     thumbnail path (use a real still wherever possible)
      excerpt   one or two sentences, shown on writing cards
      body      array of paragraphs shown inside the overlay
-     embed     { provider: "youtube", id: "…" }   ← YouTube video id
+     embed     { provider: "youtube", id: "…", start: 44 }  ← video id,
+               optional start time in seconds
                { provider: "instagram", url: "…" } ← reel permalink
                omit entirely for a piece with no recording yet
      link      { href, label } optional outbound link
@@ -68,32 +69,42 @@ var ARCHIVE = [
   },
   {
     kind: "Video",
-    title: "Working the bone: inside the studio",
-    meta: "Recording to be supplied",
-    image: "assets/img/founder-pitika-grinder.webp",
-    placeholder: true,
+    title: "Eating my Art",
+    meta: "Documentary \u00b7 HISTORY AFRICA",
+    image: "https://i.ytimg.com/vi/EQwz7M7ZlqM/hqdefault.jpg",
+    embed: { provider: "youtube", id: "EQwz7M7ZlqM", start: 44 },
     body: [
-      "Prof Ntuli at work in the Kew studio, carving and grinding — the making of a piece from raw material to finished form."
+      "Prof Pitika Ntuli on a practice where nothing is wasted and everything is transformed: bone, the material of memory, carved into works that feed the spirit."
     ]
   },
   {
     kind: "Video",
-    title: "On re-membering: a lecture on UBuSuSu",
-    meta: "Recording to be supplied",
-    image: "assets/img/focus-global-culture-photo.png",
-    placeholder: true,
+    title: "Never lose the child inside you",
+    meta: "Conversation \u00b7 Sir Max Network",
+    image: "https://i.ytimg.com/vi/rj-FctAmgjk/hqdefault.jpg",
+    embed: { provider: "youtube", id: "rj-FctAmgjk" },
     body: [
-      "Prof Ntuli sets out the triadic philosophy of UBuSuSu — Ubuntu, Sumud, Sunsum — and its argument that education is an act of re-membering."
+      "Prof Ntuli on play, curiosity and the child's eye as the wellspring of a lifetime of making."
     ]
   },
   {
     kind: "Video",
-    title: "The teaching floor: learners in the studio",
-    meta: "Recording to be supplied",
-    image: "assets/img/focus-living-space-photo.jpg",
-    placeholder: true,
+    title: "Resurrecting memory through sculpture",
+    meta: "Podcast, episode 24 \u00b7 Sir Max Network",
+    image: "https://i.ytimg.com/vi/-F5ePSm3HHc/hqdefault.jpg",
+    embed: { provider: "youtube", id: "-F5ePSm3HHc" },
     body: [
-      "The studio as classroom: learners working among the sculptures on the teaching floor at Kew."
+      "A long-form conversation with Prof Pitika Ntuli on sculpture as an act of re-membering: recovering what history scattered and giving it form again."
+    ]
+  },
+  {
+    kind: "Video",
+    title: "Pitika Ntuli: sculptor, poet and former freedom fighter",
+    meta: "Interview \u00b7 eNCA",
+    image: "https://i.ytimg.com/vi/r_zSByDvknI/hqdefault.jpg",
+    embed: { provider: "youtube", id: "r_zSByDvknI" },
+    body: [
+      "eNCA profiles Prof Ntuli across the three lives he has lived at once: the sculptor, the poet, and the freedom fighter in exile."
     ]
   }
 ];
@@ -176,6 +187,7 @@ var ARCHIVE = [
     if (item.embed && item.embed.provider === "youtube") {
       return (
         '<iframe src="https://www.youtube-nocookie.com/embed/' + esc(item.embed.id) +
+        (item.embed.start ? "?start=" + parseInt(item.embed.start, 10) : "") +
         '" title="' + esc(item.title) +
         '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
       );
