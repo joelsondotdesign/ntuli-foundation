@@ -19,6 +19,7 @@
   --line: #e5dfd2;
   --line-light: #ece7db;
   --footer-bg: #171310;
+  --navy-panel: #1c2b49;
   --font: "freight-sans-pro", "Alegreya Sans", "Segoe UI", sans-serif;
   --container: 1240px;
   --gutter: clamp(24px, 5vw, 72px);
@@ -87,8 +88,8 @@ h1, h2, h3 { font-weight: 600; color: var(--ink); line-height: 1.15; }
 }
 .btn-dark { background: var(--ink); color: var(--bone); }
 .btn-dark:hover { background: var(--navy); }
-.btn-light { background: var(--white); color: var(--navy); }
-.btn-light:hover { background: var(--bone); }
+.btn-light { background: #ffffff; color: #1c2b49; }
+.btn-light:hover { background: #ede4d0; }
 .btn-outline {
   background: transparent;
   color: var(--ink);
@@ -148,6 +149,22 @@ body.hero-bone { --nav-rest-bg: var(--bone); }
 .nav-links a { transition: color 0.2s ease; }
 .nav-links a:hover, .nav-links a.active { color: var(--ink); font-weight: 600; }
 .nav .btn-outline { background: var(--white); }
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--ink);
+  cursor: pointer;
+}
+.nav-toggle svg { width: 22px; height: 22px; }
+.nav-toggle .ic-close { display: none; }
+.nav-toggle.is-open .ic-burger { display: none; }
+.nav-toggle.is-open .ic-close { display: block; }
 
 /* ---------- home hero ---------- */
 
@@ -166,7 +183,7 @@ body.hero-bone { --nav-rest-bg: var(--bone); }
   right: 0;
   bottom: 0;
   height: 240px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffffff 80%);
+  background: linear-gradient(180deg, transparent 0%, var(--white) 80%);
   z-index: 1;
   pointer-events: none;
 }
@@ -353,7 +370,7 @@ body.hero-bone { --nav-rest-bg: var(--bone); }
 
 .donate { padding: 128px 0; }
 .donate .panel {
-  background: var(--navy);
+  background: var(--navy-panel);
   border-radius: 28px;
   text-align: center;
   padding: clamp(56px, 7vw, 96px) clamp(28px, 6vw, 96px);
@@ -364,7 +381,7 @@ body.hero-bone { --nav-rest-bg: var(--bone); }
   color: rgba(255, 255, 255, 0.55);
   margin-bottom: 18px;
 }
-.donate h2 { color: var(--white); font-size: clamp(32px, 3.6vw, 48px); margin-bottom: 20px; }
+.donate h2 { color: #ffffff; font-size: clamp(32px, 3.6vw, 48px); margin-bottom: 20px; }
 .donate p { color: rgba(255, 255, 255, 0.75); max-width: 640px; margin: 0 auto 40px; }
 .donate .actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 
@@ -450,6 +467,25 @@ a.news-row:hover .go { transform: translateX(4px); }
   color: #8a8172;
 }
 .footer .bottom .motto { font-style: italic; }
+.footer .bottom-right { display: flex; align-items: center; gap: 18px; }
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: transparent;
+  color: #d8d2c6;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.theme-toggle:hover { border-color: #ffffff; color: #ffffff; }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .sun { display: none; }
+[data-theme="dark"] .theme-toggle .moon { display: none; }
+[data-theme="dark"] .theme-toggle .sun { display: block; }
 
 /* ---------- what we do page ---------- */
 
@@ -672,7 +708,24 @@ html.loading { overflow: hidden; }
 }
 
 @media (max-width: 640px) {
-  .nav-links { display: none; }
+  .nav-toggle { display: flex; }
+  .nav .btn-outline { display: none; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    gap: 0;
+    padding: 6px 24px 18px;
+    background: var(--white);
+    border-bottom: 1px solid var(--line-light);
+    box-shadow: 0 18px 32px rgba(23, 19, 16, 0.12);
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links a { padding: 15px 0; font-size: 18px; border-bottom: 1px solid var(--line-light); }
+  .nav-links a:last-child { border-bottom: none; }
   .hero-home { min-height: 72vh; }
   .hero-home .hero-sculpture { position: relative; height: 380px; right: auto; top: auto; margin: 0 auto; }
   .hero-home { flex-direction: column; align-items: flex-start; }
@@ -1016,3 +1069,50 @@ body.overlay-open { overflow: hidden; }
   .overlay { padding-bottom: 96px; }
   .overlay-count { bottom: 34px; }
 }
+
+/* ============================================================
+   Dark theme — same warm brand, inverted ground.
+   Token flip does most of the work; the rules below patch the
+   places where a colour plays a different role on dark ground.
+   ============================================================ */
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --white: #161310;
+  --bone: #262017;
+  --bone-soft: #1e1a13;
+  --bone-faint: #1b1711;
+  --navy: #a9bee6;
+  --ink: #f1eadd;
+  --body: #b1a896;
+  --ochre: #d9a04c;
+  --line: #3a3226;
+  --line-light: #2b251c;
+  --footer-bg: #0e0c09;
+}
+
+/* the wordmark is charcoal artwork — swap in the bone version */
+[data-theme="dark"] .nav-logo img { content: url("../img/logo-light.png"); }
+
+/* the sand glyph would glow on dark ground — let it whisper instead */
+[data-theme="dark"] .hero-home .n-bg { opacity: 0.14; }
+
+[data-theme="dark"] .nav.is-stuck {
+  background: rgba(22, 19, 14, 0.88);
+  border-bottom-color: var(--line-light);
+  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .cookie {
+  background: rgba(32, 27, 19, 0.9);
+  border-color: var(--line);
+  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.6);
+}
+
+[data-theme="dark"] .overlay-panel {
+  border-color: var(--line);
+  box-shadow: 0 24px 64px -12px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .news-row .thumb,
+[data-theme="dark"] .featured .thumb { background: #2b251c; }

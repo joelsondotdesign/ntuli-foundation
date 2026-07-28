@@ -27,6 +27,35 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
+  /* ---------- mobile menu ---------- */
+
+  var navToggle = document.querySelector("[data-nav-toggle]");
+  var navLinks = document.querySelector(".nav-links");
+  if (navToggle && navLinks) {
+    navToggle.addEventListener("click", function () {
+      var open = navLinks.classList.toggle("is-open");
+      navToggle.classList.toggle("is-open", open);
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+
+  /* ---------- theme (light / dark) ----------
+     The footer button flips a data-theme attribute on <html>; a tiny
+     inline script in each page's head applies the stored choice (or
+     the system preference) before first paint, so there is no flash. */
+
+  document.querySelectorAll("[data-theme-toggle]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var wasDark = document.documentElement.getAttribute("data-theme") === "dark";
+      if (wasDark) {
+        document.documentElement.removeAttribute("data-theme");
+      } else {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+      try { localStorage.setItem("ntuli-theme", wasDark ? "light" : "dark"); } catch (e) {}
+    });
+  });
+
   /* ---------- cookie notice ---------- */
 
   var cookie = document.querySelector(".cookie");
