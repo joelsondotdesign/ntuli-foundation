@@ -1,6 +1,7 @@
 import Nav from "./Nav";
 import Footer from "./Footer";
 import SiteScripts from "./SiteScripts";
+import CookieNotice from "./CookieNotice";
 
 export default function SiteChrome({
   variant,
@@ -17,13 +18,7 @@ export default function SiteChrome({
       <Nav />
       {children}
       <Footer />
-      <aside className="cookie" role="region" aria-label="Cookie notice">
-        <p>We use a small number of cookies to understand how the site is used. Nothing is sold, and nothing is shared with advertisers.</p>
-        <div className="cookie-actions">
-          <button className="decline" data-choice="declined" type="button">Decline</button>
-          <button className="accept" data-choice="accepted" type="button">Accept</button>
-        </div>
-      </aside>
+      <CookieNotice />
       <SiteScripts />
     </div>
   );

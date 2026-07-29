@@ -36,44 +36,6 @@ export default function SiteScripts() {
       cleanups.push(() => navToggle.removeEventListener("click", onToggle));
     }
 
-    /* ---------- theme ---------- */
-    document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
-      const onClick = () => {
-        const wasDark = document.documentElement.getAttribute("data-theme") === "dark";
-        if (wasDark) document.documentElement.removeAttribute("data-theme");
-        else document.documentElement.setAttribute("data-theme", "dark");
-        try {
-          localStorage.setItem("ntuli-theme", wasDark ? "light" : "dark");
-        } catch {}
-      };
-      btn.addEventListener("click", onClick);
-      cleanups.push(() => btn.removeEventListener("click", onClick));
-    });
-
-    /* ---------- cookie notice ---------- */
-    const cookie = document.querySelector(".cookie");
-    if (cookie) {
-      if (localStorage.getItem("ntuli-cookie-choice")) {
-        cookie.remove();
-      } else {
-        const showTimer = window.setTimeout(() => cookie.classList.add("is-in"), 1600);
-        cleanups.push(() => window.clearTimeout(showTimer));
-
-        let removeTimer = 0;
-        cleanups.push(() => window.clearTimeout(removeTimer));
-
-        const onCookieClick = (e: Event) => {
-          const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("button[data-choice]");
-          if (!btn) return;
-          localStorage.setItem("ntuli-cookie-choice", btn.dataset.choice!);
-          cookie.classList.remove("is-in");
-          removeTimer = window.setTimeout(() => cookie.remove(), 700);
-        };
-        cookie.addEventListener("click", onCookieClick);
-        cleanups.push(() => cookie.removeEventListener("click", onCookieClick));
-      }
-    }
-
     /* ---------- first-load-only loader ---------- */
     const loader = document.querySelector(".loader");
     if (loader) {
