@@ -24,16 +24,18 @@ import { createHash } from "node:crypto";
  * on purpose, update these and say so; if they move unexpectedly, that is a
  * regression in visible markup.
  *
- *   /             735dbe13713712317c65a325fe30fa3b4599c95f2cfae58399da8fec56341e6e
- *   /what-we-do   0dc07888a0f8745f066fefe36be89718dc2bec6d5d9e6c6e9a023d8c4ade5fa5
- *   /our-team     0f74edd5ac268e4972ac274f5330b4034ca35f19df769291742848f215ad097c
- *   /studio       71be3d140ec220182eeb1ce5c87a4b26a04e635503bdc9a1abef589fa3538576
- *   /news         cc6e70b7ae1e2c778860be8719faaf7eac17a44c0fe24e92931786b78fa8f7fc
- *   /archive      e04b2786458706de30516821c579b326b5dd169b7f203ee414fd053a9fe3e6e2
+ *   /             269c83c9d9d10de577ff867ba95379031d86c3faa86807e7ddbde2d33ae4c114
+ *   /what-we-do   ef5fb558c3f8fb43a55f5c64841e89a7c5ac35f49aff36f693c991324f0bc9f7
+ *   /our-team     6f5800f450c0c0822f053241566821674d98fa7ded67f9865745d557173c0e25
+ *   /studio       63d2bebef57db0440ced27456f9383a4dd1ccea8f3c6eea85e6e63c9cf1726d9
+ *   /news         74728931304ec41c1808a14d4665022c1776952eaea396b271656000069c49a1
+ *   /archive      adca1611f11c5860ec0a361193651378554a76cfbfc4d59b17f30f457be32f44
  *
- * Scope caveat: this hashes markup outside <script> tags (plus the JSON-LD
- * block). It does not guard the RSC payload, so a change that alters only
- * client-component wiring and no visible DOM will NOT move these.
+ * Scope caveat: this hashes rendered markup plus the two hand-authored inline
+ * scripts (THEME_SCRIPT and the JSON-LD). It does NOT guard the RSC payload, so
+ * a change that alters only client-component wiring and leaves the visible DOM
+ * identical will not move these — the CookieNotice timer fix is one such case.
+ * Verify those by behaviour (Puppeteer), not by fingerprint.
  * ---------------------------------------------------------------------------
  */
 
@@ -49,16 +51,28 @@ const ROUTES = ["/", "/what-we-do", "/our-team", "/studio", "/news", "/archive"]
 function normalise(html) {
   let out = html;
 
-  // 1. Script blocks. These carry the RSC flight payload (`self.__next_f.push`),
-  //    which embeds the random per-build id as `"b":"<random>"`, plus chunk
-  //    `src` URLs. All build artefact, no visible markup.
+  // 1. Strip Next's GENERATED scripts only — never "everything but an allowlist".
   //
-  //    Exception: `application/ld+json` is kept. It is literal source content
-  //    (SEO structured data), it is stable across builds, and a CMS change that
-  //    silently broke it is exactly the kind of regression this should catch.
-  out = out.replace(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi, (match, attrs) =>
-    /application\/ld\+json/i.test(attrs) ? match : "",
-  );
+  //    The rule is inverted deliberately. An allowlist is default-unsafe: every
+  //    hand-authored script has to be remembered, and forgetting one silently
+  //    drops it from the contract. That bit us once already — an earlier
+  //    everything-but-ld+json rule erased the inline THEME_SCRIPT from
+  //    src/app/(site)/layout.tsx, which is exactly the script whose localStorage
+  //    key, if renamed, gives dark-mode users a flash of light on every reload.
+  //    That regression would have moved no fingerprint at all.
+  //
+  //    Generated scripts carry one of two signatures, confirmed by enumerating
+  //    all 30 script tags on `/`:
+  //      - a `src` pointing into /_next/     (9 tags: content-hashed chunks)
+  //      - a body containing `self.__next_f` (19 tags: RSC flight payload, which
+  //        is where the random per-build `"b":"<id>"` lives)
+  //    The remaining 2 are hand-authored and kept: THEME_SCRIPT and the JSON-LD
+  //    block. Anything hand-authored added later is guarded by default.
+  out = out.replace(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi, (match, attrs, body) => {
+    const isNextChunk = /\bsrc\s*=\s*["'][^"']*\/_next\//i.test(attrs);
+    const isFlightPayload = /self\.__next_f/.test(body);
+    return isNextChunk || isFlightPayload ? "" : match;
+  });
 
   // 2. Content-hashed asset URLs, e.g.
   //    /_next/static/chunks/01dkdyukbdpqq.js
