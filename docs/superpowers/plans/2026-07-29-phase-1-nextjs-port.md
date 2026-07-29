@@ -502,7 +502,6 @@ The loader and cookie notice are transcribed from `index.html:107` and `index.ht
 // src/components/SiteChrome.tsx
 import Nav from "./Nav";
 import Footer from "./Footer";
-import SiteScripts from "./SiteScripts";
 
 export default function SiteChrome({
   variant,
@@ -526,15 +525,22 @@ export default function SiteChrome({
           <button className="accept" data-choice="accepted" type="button">Accept</button>
         </div>
       </aside>
-      <SiteScripts />
     </div>
   );
 }
 ```
 
-`SiteScripts` does not exist until Task 4, so this file will not typecheck until then. That is expected — Task 4 completes the pair.
+Task 4 adds the `SiteScripts` import and element to this file. This task must end with `npm run typecheck` and `npm run build` both green on their own.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 6: Verify the build is green**
+
+```bash
+npm run typecheck && npm run build
+```
+
+Expected: both succeed. Nothing renders `SiteChrome` yet — that starts in Task 5.
+
+- [ ] **Step 7: Commit**
 
 ```bash
 git add -A
@@ -547,10 +553,11 @@ git commit -m "Shared Nav, Footer and SiteChrome components"
 
 **Files:**
 - Create: `src/components/SiteScripts.tsx`
+- Modify: `src/components/SiteChrome.tsx` — add the import and render `<SiteScripts />` as the last child of the wrapper div
 - Reference: `public/assets/js/main.js` (deleted in Task 10, kept until then for line-by-line comparison)
 
 **Interfaces:**
-- Consumes: nothing
+- Consumes: `SiteChrome` from Task 3
 - Produces: `<SiteScripts />` — no props, client component, rendered once by `SiteChrome`
 
 **What this must reproduce, from `main.js`:** sticky nav (`is-stuck` past 24px), mobile menu toggle, theme toggle writing `localStorage["ntuli-theme"]`, cookie notice with `localStorage["ntuli-cookie-choice"]` and a 1600ms delay, first-load-only loader via `sessionStorage["ntuli-visited"]`, IntersectionObserver reveals at `threshold: 0.12` where anything above `innerHeight * 0.95` shows instantly, the two pinned GSAP timelines, and the reduced-motion fallback.
@@ -747,15 +754,31 @@ export default function SiteScripts() {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [ ] **Step 2: Wire it into `SiteChrome`**
 
-```bash
-npm run typecheck
+Add the import alongside the existing `Nav` and `Footer` imports:
+
+```tsx
+import SiteScripts from "./SiteScripts";
 ```
 
-Expected: no errors. `SiteChrome` from Task 3 now resolves.
+and render it as the **last child of the wrapper div**, after the closing `</aside>` of the cookie notice:
 
-- [ ] **Step 3: Commit**
+```tsx
+      </aside>
+      <SiteScripts />
+    </div>
+```
+
+- [ ] **Step 3: Typecheck and build**
+
+```bash
+npm run typecheck && npm run build
+```
+
+Expected: both succeed.
+
+- [ ] **Step 4: Commit**
 
 ```bash
 git add -A
