@@ -12,7 +12,7 @@ export default function NotFound() {
             The page you were looking for is not here. It may have been renamed, or the link that brought you here may be
             out of date.
           </p>
-          <Link className="btn btn-dark" href="/">
+          <Link className="btn btn-dark" href="/" prefetch={false}>
             Return home
           </Link>
         </div>

@@ -75,7 +75,7 @@ export default function Home() {
             <div className="hero-copy">
               <h1 className="display">Living archives<br /><em>ancestral voices</em><br />shared futures</h1>
               <p>Grounded in the philosophy of UBuSuSu, our work unfolds across the archive, studio, education, community, and global dialogue: intergenerational sites of living knowledge.</p>
-              <Link className="btn btn-dark" href="/what-we-do">Explore our work</Link>
+              <Link className="btn btn-dark" href="/what-we-do" prefetch={false}>Explore our work</Link>
             </div>
           </div>
           <div className="scroll-badge" aria-hidden="true">
@@ -233,7 +233,7 @@ export default function Home() {
                 <span className="eyebrow">Latest</span>
                 <h2 className="h2 navy">From the threshold</h2>
               </div>
-              <Link className="text-link" href="/news">All news <span className="arrow">→</span></Link>
+              <Link className="text-link" href="/news" prefetch={false}>All news <span className="arrow">→</span></Link>
             </div>
             <a className="news-row reveal" href="https://www.amazon.fr/-/en/Pitika-Ntuli/dp/0639878504" target="_blank" rel="noopener">
               <div className="thumb"><img src="/assets/img/news-book.jpg" alt="Palestine in My Heart — book cover" /></div>
