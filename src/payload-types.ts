@@ -121,7 +121,14 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
-  name?: string | null;
+  /**
+   * The name shown next to anything this person publishes.
+   */
+  name: string;
+  /**
+   * Only an Admin can change this.
+   */
+  role: 'editor' | 'admin';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -216,6 +223,7 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

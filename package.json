@@ -12,7 +12,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "smoke": "next build && node scripts/smoke.mjs",
-    "fingerprint": "next build && node scripts/fingerprint.mjs"
+    "fingerprint": "next build && node scripts/fingerprint.mjs",
+    "generate:types": "payload generate:types"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.86.0",
