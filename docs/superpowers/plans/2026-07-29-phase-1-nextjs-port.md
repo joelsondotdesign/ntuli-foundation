@@ -2,7 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Move the six hand-written HTML pages into a Next.js app that is visually and behaviourally indistinguishable from the current live site, with no CMS involved.
+**Goal:** Move the six hand-written HTML pages into a Next.js app that is visually and behaviourally indistinguishable from the static site at this repo's current HEAD, with no CMS involved.
+
+**Baseline note:** the deployed site at `ntulifoundation.org` is stale and is **not** the reference. Task 1 pins a git worktree of the pre-port HTML at `/tmp/ntuli-baseline`, served on port 3200; that is what every comparison in this plan measures against.
 
 **Architecture:** Next.js 16 App Router, TypeScript, static generation. The existing `main.css`, fonts and images move to `public/assets/` at their current paths and are linked with plain `<link>` tags — never imported through the bundler, never rewritten. Markup becomes JSX with identical class names and DOM structure. `main.js` and `archive.js` are ported into client components so their listeners bind on mount and clean up on unmount.
 
@@ -230,7 +232,37 @@ kill $SERVER
 
 Expected: `200` twice. If either is not 200, the asset move is wrong — fix before continuing.
 
-- [ ] **Step 13: Commit**
+- [ ] **Step 13: Stand up the comparison baseline**
+
+**Do not compare against `https://www.ntulifoundation.org`.** The deployed site is stale — it
+predates commits `f5b013b` and `4be8779`, so it still shows the events section, has no footer
+social icons, spells the wordmark `UbuSuSu`, and lists three placeholder videos instead of four
+real ones. Comparing against it would surface four intended differences as if they were port
+defects.
+
+The correct baseline is this repo's static HTML at the commit before the port began. Task 10
+deletes those files, so pin a worktree to them now:
+
+```bash
+git worktree add --detach /tmp/ntuli-baseline HEAD
+ls /tmp/ntuli-baseline/*.html | wc -l
+```
+
+Expected: `6`
+
+Serve it whenever a comparison step calls for `localhost:3200`:
+
+```bash
+python3 -m http.server 3200 -d /tmp/ntuli-baseline > /dev/null 2>&1 &
+BASELINE=$!
+curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3200/index.html
+```
+
+Expected: `200`. Stop it with `kill $BASELINE` when done.
+
+The worktree is removed in Task 11 once verification is complete.
+
+- [ ] **Step 14: Commit**
 
 ```bash
 git add -A
@@ -922,7 +954,7 @@ npm run build
 npm start & SERVER=$!
 sleep 4
 curl -s http://localhost:3000/ > /tmp/new-home.html
-curl -s https://www.ntulifoundation.org/ > /tmp/old-home.html
+curl -s http://localhost:3200/index.html > /tmp/old-home.html
 for c in hero-home hero-copy about focus programmes events latest news-row scroll-badge; do
   printf "%-14s old=%s new=%s\n" "$c" \
     "$(grep -o "class=\"[^\"]*$c" /tmp/old-home.html | wc -l)" \
@@ -1005,7 +1037,7 @@ done
 kill $SERVER
 ```
 
-Expected, compared against the same command run on `https://www.ntulifoundation.org/what-we-do.html`: identical counts. `commit-row` must be 6.
+Expected, compared against the same command run on `http://localhost:3200/what-we-do.html`: identical counts. `commit-row` must be 6.
 
 - [ ] **Step 3: Scroll both sequences by hand**
 
@@ -1026,7 +1058,7 @@ Open `http://localhost:3000/what-we-do` and confirm:
 8. With `prefers-reduced-motion: reduce` (DevTools → Rendering → Emulate CSS media), nothing pins and all rows and the wordmark are visible at full opacity
 9. Navigate to `/news` and back — **the pin still works.** This is what the cleanup in Task 4 exists for; if it fails, `ctx.revert()` is not running
 
-Compare side by side with `https://www.ntulifoundation.org/what-we-do.html`.
+Compare side by side with the baseline at `http://localhost:3200/what-we-do.html`.
 
 - [ ] **Step 4: Commit**
 
@@ -1091,7 +1123,7 @@ export default function Studio() {
 
 Copy `description` and `og:description` from `studio.html` verbatim.
 
-- [ ] **Step 3: Verify both against the live site**
+- [ ] **Step 3: Verify both against the baseline**
 
 ```bash
 npm run build
@@ -1099,7 +1131,7 @@ npm start & SERVER=$!
 sleep 4
 for p in our-team studio; do
   new=$(curl -s "http://localhost:3000/$p" | grep -o 'class="[^"]*"' | wc -l)
-  old=$(curl -s "https://www.ntulifoundation.org/$p.html" | grep -o 'class="[^"]*"' | wc -l)
+  old=$(curl -s "http://localhost:3200/$p.html" | grep -o 'class="[^"]*"' | wc -l)
   printf "%-10s old=%s new=%s\n" "$p" "$old" "$new"
 done
 kill $SERVER
@@ -1536,7 +1568,7 @@ Three details taken from `archive.html:68-86`, all of which matter: the hero is 
 npm run dev
 ```
 
-At `http://localhost:3000/archive`, confirm against `https://www.ntulifoundation.org/archive.html`:
+At `http://localhost:3000/archive`, confirm against the baseline at `http://localhost:3200/archive.html`:
 1. Seven cards; four Video with play badges, three Writing
 2. Filters switch correctly and the active button is highlighted
 3. Clicking a card opens the overlay with the right entry
@@ -1724,7 +1756,7 @@ git commit -m "Add redirects, 404 page and smoke test; remove the static HTML"
 
 ---
 
-### Task 11: Visual verification against the live site
+### Task 11: Visual verification against the pre-port baseline
 
 **Files:**
 - Create: `scripts/shots.mjs`
@@ -1745,7 +1777,7 @@ import { mkdirSync } from "node:fs";
 const CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
 const OUT = "/tmp/ntuli-shots";
 const PAGES = [
-  ["home", "/", "/"],
+  ["home", "/", "/index.html"],
   ["what-we-do", "/what-we-do", "/what-we-do.html"],
   ["our-team", "/our-team", "/our-team.html"],
   ["studio", "/studio", "/studio.html"],
@@ -1755,7 +1787,12 @@ const PAGES = [
 const WIDTHS = [[1440, 2400], [390, 1600]];
 
 mkdirSync(OUT, { recursive: true });
+
+/* Port 3100: the ported Next.js build. Port 3200: the pre-port HTML
+   worktree pinned in Task 1. Both local, so neither is subject to
+   network variance or a stale deploy. */
 const server = spawn("npx", ["next", "start", "-p", "3100"], { stdio: "ignore" });
+const baseline = spawn("python3", ["-m", "http.server", "3200", "-d", "/tmp/ntuli-baseline"], { stdio: "ignore" });
 await new Promise((r) => setTimeout(r, 6000));
 
 const shoot = (url, out, w, h) =>
@@ -1768,12 +1805,13 @@ const shoot = (url, out, w, h) =>
 for (const [name, newPath, oldPath] of PAGES) {
   for (const [w, h] of WIDTHS) {
     shoot(`http://localhost:3100${newPath}`, `${OUT}/${name}-${w}-new.png`, w, h);
-    shoot(`https://www.ntulifoundation.org${oldPath}`, `${OUT}/${name}-${w}-old.png`, w, h);
+    shoot(`http://localhost:3200${oldPath}`, `${OUT}/${name}-${w}-old.png`, w, h);
     console.log(`shot ${name} @ ${w}`);
   }
 }
 
 server.kill();
+baseline.kill();
 console.log(`\nScreenshots in ${OUT}`);
 ```
 
@@ -1788,7 +1826,7 @@ open /tmp/ntuli-shots
 
 Open each `-old` / `-new` pair. Expected differences are limited to: content below the fold that reveal-on-scroll has not triggered, and the loader on first paint. **Anything else — spacing, type size, colour, image crop, element order — is a port defect and must be fixed before this task is complete.**
 
-The home page pair has one *intended* difference: the live site still shows the events section if the deployed copy predates commit `4be8779`. Confirm which is deployed before treating it as a defect.
+There should be **no intended differences**: the baseline is this repo's own HTML at the commit the port started from, so the events section is hidden in both, the footer social icons are present in both, and the wordmark reads `UBuSuSu` in both.
 
 - [ ] **Step 4: Check both themes and reduced motion**
 
@@ -1800,16 +1838,26 @@ On every one of the six routes: toggle dark mode from the footer and confirm no 
 
 - [ ] **Step 5: Lighthouse before and after**
 
+Both runs are local, so the numbers are comparable — a remote baseline would be measuring the network, not the port.
+
 ```bash
-npx lighthouse https://www.ntulifoundation.org/ --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=/tmp/lh-old.json --quiet --chrome-flags="--headless"
-npm start & SERVER=$!
+LH="--only-categories=performance,accessibility,best-practices,seo --quiet --chrome-flags=--headless"
+
+python3 -m http.server 3200 -d /tmp/ntuli-baseline > /dev/null 2>&1 & BASELINE=$!
+sleep 2
+npx lighthouse http://localhost:3200/index.html $LH --output=json --output-path=/tmp/lh-old.json
+kill $BASELINE
+
+npm run build
+npx next start -p 3100 > /dev/null 2>&1 & SERVER=$!
 sleep 5
-npx lighthouse http://localhost:3100/ --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=/tmp/lh-new.json --quiet --chrome-flags="--headless"
+npx lighthouse http://localhost:3100/ $LH --output=json --output-path=/tmp/lh-new.json
 kill $SERVER
+
 node -e "for (const f of ['old','new']) { const r = require('/tmp/lh-'+f+'.json'); console.log(f, Object.fromEntries(Object.entries(r.categories).map(([k,v])=>[k, Math.round(v.score*100)]))) }"
 ```
 
-Record both. Any category that drops by more than 5 points needs an explanation before Phase 2 begins.
+Record both. Any category that drops by more than 5 points needs an explanation before Phase 2 begins. Performance is expected to *improve*: the two render-blocking GSAP CDN requests are gone.
 
 - [ ] **Step 6: Commit the verification tooling**
 
@@ -1818,6 +1866,17 @@ git add scripts/shots.mjs
 git commit -m "Add screenshot comparison tooling for port verification"
 ```
 
+- [ ] **Step 7: Remove the baseline worktree**
+
+Only once every check above has passed — it is the only copy of the pre-port HTML outside git history.
+
+```bash
+git worktree remove --force /tmp/ntuli-baseline
+git worktree list
+```
+
+Expected: `/tmp/ntuli-baseline` no longer listed.
+
 ---
 
 ## Definition of done
@@ -1825,7 +1884,7 @@ git commit -m "Add screenshot comparison tooling for port verification"
 - [ ] `npm run build` succeeds with every route listed as static
 - [ ] `npm run typecheck` passes
 - [ ] `npm run smoke` passes
-- [ ] All six pages screenshot-compared at 1440px and 390px against the live site, differences accounted for
+- [ ] All six pages screenshot-compared at 1440px and 390px against the `/tmp/ntuli-baseline` worktree, differences accounted for
 - [ ] Both pinned GSAP sequences verified by hand, including after client-side navigation away and back
 - [ ] Dark mode verified on all six routes with no flash on reload
 - [ ] Reduced motion verified
