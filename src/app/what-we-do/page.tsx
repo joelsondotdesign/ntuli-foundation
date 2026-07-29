@@ -4,9 +4,14 @@ import SiteChrome from "@/components/SiteChrome";
 export const metadata: Metadata = {
   title: "What we do | Ntuli Foundation",
   description:
-    "The UBuSuSu philosophy, six strategic commitments, and education programmes advancing African Indigenous Knowledge Systems.",
+    "How the Ntuli Foundation advances African Indigenous Knowledge Systems: the UBuSuSu philosophy, six strategic commitments, education programmes and global alignment.",
   alternates: { canonical: "/what-we-do" },
-  openGraph: { title: "What we do | Ntuli Foundation", url: "/what-we-do" },
+  openGraph: {
+    title: "What we do | Ntuli Foundation",
+    description:
+      "The UBuSuSu philosophy, six strategic commitments, and education programmes advancing African Indigenous Knowledge Systems.",
+    url: "/what-we-do",
+  },
 };
 
 export default function WhatWeDo() {
