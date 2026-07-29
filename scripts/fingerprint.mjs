@@ -19,17 +19,18 @@ import { createHash } from "node:crypto";
  * far worse trade than normalising here.
  *
  * ---------------------------------------------------------------------------
- * BASELINE — as of Task 2 (extraction of CookieNotice and ThemeToggle).
+ * BASELINE — as of Task 2b (Footer social links corrected: Facebook and
+ * LinkedIn removed, X and Instagram handles corrected, YouTube added).
  * This is the contract Task 11 checks against. If a task changes page content
  * on purpose, update these and say so; if they move unexpectedly, that is a
  * regression in visible markup.
  *
- *   /             269c83c9d9d10de577ff867ba95379031d86c3faa86807e7ddbde2d33ae4c114
- *   /what-we-do   ef5fb558c3f8fb43a55f5c64841e89a7c5ac35f49aff36f693c991324f0bc9f7
- *   /our-team     6f5800f450c0c0822f053241566821674d98fa7ded67f9865745d557173c0e25
- *   /studio       63d2bebef57db0440ced27456f9383a4dd1ccea8f3c6eea85e6e63c9cf1726d9
- *   /news         74728931304ec41c1808a14d4665022c1776952eaea396b271656000069c49a1
- *   /archive      adca1611f11c5860ec0a361193651378554a76cfbfc4d59b17f30f457be32f44
+ *   /             0715b85f0f6ce6438ce9a1af4d716e4f66e43d889583913951f7ef6e1c5231b3
+ *   /what-we-do   1f716c6251d2af46132f4cbc0509fe660b40315d12bbcdcc6feffe0eeb20e57d
+ *   /our-team     bbbf155808de81b8efdc5130973e1506705e85a87592c921ca0418498959188d
+ *   /studio       9f36880aa5001cd6027de62e6b11f517ab3b97da828e2730e75a1138db92ce38
+ *   /news         c42b737ad0dbd5a4d21eec0b7aed94cbd95ffb82977813c09366cdc44ec9c74a
+ *   /archive      6cb61257d84f911acb001e016c3a85cb05fc4cc9f63a021a9acef1ab48af3b6f
  *
  * Scope caveat: this hashes rendered markup plus the two hand-authored inline
  * scripts (THEME_SCRIPT and the JSON-LD). It does NOT guard the RSC payload, so
