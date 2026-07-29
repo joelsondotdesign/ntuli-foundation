@@ -59,12 +59,15 @@ export default function SiteScripts() {
         const showTimer = window.setTimeout(() => cookie.classList.add("is-in"), 1600);
         cleanups.push(() => window.clearTimeout(showTimer));
 
+        let removeTimer = 0;
+        cleanups.push(() => window.clearTimeout(removeTimer));
+
         const onCookieClick = (e: Event) => {
           const btn = (e.target as HTMLElement).closest<HTMLButtonElement>("button[data-choice]");
           if (!btn) return;
           localStorage.setItem("ntuli-cookie-choice", btn.dataset.choice!);
           cookie.classList.remove("is-in");
-          window.setTimeout(() => cookie.remove(), 700);
+          removeTimer = window.setTimeout(() => cookie.remove(), 700);
         };
         cookie.addEventListener("click", onCookieClick);
         cleanups.push(() => cookie.removeEventListener("click", onCookieClick));
@@ -80,11 +83,19 @@ export default function SiteScripts() {
         document.documentElement.classList.remove("loading");
       } else {
         sessionStorage.setItem("ntuli-visited", "1");
+
+        let doneTimer = 0;
+        let removeLoaderTimer = 0;
+        cleanups.push(() => {
+          window.clearTimeout(doneTimer);
+          window.clearTimeout(removeLoaderTimer);
+        });
+
         const finish = () => {
-          window.setTimeout(() => {
+          doneTimer = window.setTimeout(() => {
             loader.classList.add("is-done");
             document.documentElement.classList.remove("loading");
-            window.setTimeout(() => loader.remove(), 800);
+            removeLoaderTimer = window.setTimeout(() => loader.remove(), 800);
           }, 900);
         };
         if (document.readyState === "complete") finish();
