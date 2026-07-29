@@ -20,7 +20,7 @@ const REDIRECTS = [
   ["/news.html", "/news"],
 ];
 
-const server = spawn("npx", ["next", "start", "-p", "3100"], { stdio: "ignore" });
+const server = spawn("npx", ["next", "start", "-p", "3100"], { stdio: "ignore", detached: true });
 let failures = 0;
 
 const fail = (msg) => { console.error(`FAIL  ${msg}`); failures++; };
@@ -67,7 +67,13 @@ try {
     else pass(asset);
   }
 } finally {
-  server.kill();
+  // `next start` spawns its own worker process; killing only the `npx`
+  // process it's spawned under can leave that worker holding port 3100
+  // and break the *next* run. Spawned `detached`, so `server.pid` is the
+  // process group leader — kill the whole group.
+  try {
+    process.kill(-server.pid, "SIGTERM");
+  } catch {}
 }
 
 console.log(failures === 0 ? "\nAll smoke checks passed." : `\n${failures} smoke check(s) failed.`);

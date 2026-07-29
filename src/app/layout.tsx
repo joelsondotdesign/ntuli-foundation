@@ -20,7 +20,7 @@ export const viewport = { themeColor: "#2B2926" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-ZA" className="loading">
+    <html lang="en-ZA" className="loading" data-scroll-behavior="smooth">
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="" />
