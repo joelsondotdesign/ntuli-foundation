@@ -1,5 +1,6 @@
 import Nav from "./Nav";
 import Footer from "./Footer";
+import SiteScripts from "./SiteScripts";
 
 export default function SiteChrome({
   variant,
@@ -23,6 +24,7 @@ export default function SiteChrome({
           <button className="accept" data-choice="accepted" type="button">Accept</button>
         </div>
       </aside>
+      <SiteScripts />
     </div>
   );
 }
