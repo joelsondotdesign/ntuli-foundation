@@ -27,6 +27,14 @@ export const Users: CollectionConfig = {
     update: isAdminOrSelf,
     delete: isAdmin,
     admin: ({ req: { user } }) => Boolean(user),
+    // Must be set explicitly. If this key is left undefined, Payload's
+    // executeAccess falls through to `if (req.user) return true` — i.e. any
+    // logged-in user passes — so an editor could POST /api/users/unlock
+    // against any account, including an admin's, resetting loginAttempts and
+    // lockUntil. That makes the maxLoginAttempts lockout above defeatable at
+    // will: five guesses, unlock, repeat. Verified by reproducing it before
+    // this line was added.
+    unlock: isAdmin,
   },
   fields: [
     {
@@ -44,6 +52,13 @@ export const Users: CollectionConfig = {
         { label: "Editor — can add and edit content", value: "editor" },
         { label: "Admin — can also manage who has access", value: "admin" },
       ],
+      // Deliberately only `update`, with no `create`: the collection-level
+      // `create: isAdmin` already blocks every non-admin create, so a
+      // non-admin never reaches this field on create. If `create` is ever
+      // loosened at collection level, this field needs its own
+      // `access.create: isAdmin` too, or a new user could be created with
+      // role "admin" by whoever gains create rights.
+      //
       // Same rule as isAdmin above, expressed inline: Payload's FieldAccess
       // type allows a broader `id` type (string | number) than the
       // collection-level Access type does once generated types pin this
