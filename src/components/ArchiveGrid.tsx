@@ -21,6 +21,11 @@ export default function ArchiveGrid({ entries }: { entries: ArchiveEntry[] }) {
   const [filter, setFilter] = useState<Filter>("all");
   const [current, setCurrent] = useState(-1);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  /* The index of the entry currently on screen. `current` is already -1 by
+     the time the close cleanup runs, so the last displayed index is latched
+     here for the focus restore to read. */
+  const shownIndexRef = useRef(-1);
 
   const visible = filter === "all" ? entries : entries.filter((e) => e.kind === filter);
   const isOpen = current >= 0 && current < visible.length;
@@ -36,15 +41,18 @@ export default function ArchiveGrid({ entries }: { entries: ArchiveEntry[] }) {
     [visible.length],
   );
 
-  /* Scroll lock, and return focus to the card that opened the overlay.
-     archive.js did this with an explicit querySelector on close(). */
+  /* Scroll lock, and return focus to the card matching the entry that was on
+     screen at close time — not the card that originally opened the overlay,
+     since prev/next may have moved on since. archive.js:258 did the same with
+     grid.querySelector('[data-index="' + current + '"]'). */
   useEffect(() => {
     if (!isOpen) return;
-    const trigger = document.activeElement as HTMLElement | null;
     document.body.classList.add("overlay-open");
     return () => {
       document.body.classList.remove("overlay-open");
-      trigger?.focus?.();
+      gridRef.current
+        ?.querySelector<HTMLElement>(`[data-index="${shownIndexRef.current}"]`)
+        ?.focus();
     };
   }, [isOpen]);
 
@@ -60,9 +68,13 @@ export default function ArchiveGrid({ entries }: { entries: ArchiveEntry[] }) {
   }, [isOpen, close, step]);
 
   /* archive.js focused the close control on every open(), including
-     prev/next steps. Same here. */
+     prev/next steps. Same here. Latching the displayed index alongside it
+     keeps the two in step: React runs every cleanup before any effect body,
+     so the close cleanup above still sees the last displayed index. */
   useEffect(() => {
-    if (isOpen) closeRef.current?.focus();
+    if (!isOpen) return;
+    shownIndexRef.current = current;
+    closeRef.current?.focus();
   }, [isOpen, current]);
 
   /* Changing filter invalidates the open index. */
@@ -84,7 +96,7 @@ export default function ArchiveGrid({ entries }: { entries: ArchiveEntry[] }) {
         ))}
       </div>
 
-      <div className="archive-grid" data-archive-grid>
+      <div className="archive-grid" data-archive-grid ref={gridRef}>
         {visible.length === 0 ? (
           <p className="archive-empty">Nothing in this part of the archive yet.</p>
         ) : (
