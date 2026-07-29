@@ -5,7 +5,15 @@ import { ARCHIVE } from "@/data/archive";
 
 export const metadata: Metadata = {
   title: "Archive | Ntuli Foundation",
+  description:
+    "The living record: films, lectures, essays and published writing by Prof Pitika Ntuli, held and activated by the Ntuli Foundation.",
   alternates: { canonical: "/archive" },
+  openGraph: {
+    title: "Archive | Ntuli Foundation",
+    description:
+      "Films, lectures, essays and published writing by Prof Pitika Ntuli — the Foundation's living record.",
+    url: "/archive",
+  },
 };
 
 export default function Archive() {
