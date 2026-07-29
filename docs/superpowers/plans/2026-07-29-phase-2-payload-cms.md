@@ -95,7 +95,9 @@ done
 kill $SERVER
 ```
 
-Record the six checksums in your report. Nothing else in this task may change them.
+Record the six fingerprints in your report. Nothing else in this task may change them.
+
+**Do not use a raw md5 of the response.** Next embeds a fresh build ID in the RSC payload on every `next build`, so two builds of identical source produce different checksums — verified. Use `npm run fingerprint` (added in Task 2), which strips `<script>` blocks and `/_next/static/<hash>/` paths before hashing, so it fingerprints the visible markup rather than the build artefact.
 
 - [ ] **Step 4: Run the smoke test**
 
@@ -235,7 +237,7 @@ done
 kill $SERVER
 ```
 
-Expected: **the same six checksums recorded in Task 1 Step 3.** The cookie notice previously rendered server-side and now renders `null` until an effect runs, so if a checksum changes, confirm the only difference is the `<aside class="cookie">` element and say so explicitly in your report — a change anywhere else is a defect.
+Expected: the same six fingerprints as Task 1, except for the cookie block. The cookie notice previously rendered server-side and now renders `null` until an effect runs, so if a checksum changes, confirm the only difference is the `<aside class="cookie">` element and say so explicitly in your report — a change anywhere else is a defect.
 
 - [ ] **Step 5: Verify the behaviour by hand**
 
@@ -1453,7 +1455,7 @@ npm run test
 
 Expected: smoke now 18/18; YouTube tests 8/8; the six public routes still `○ Static`.
 
-Re-run the Task 1 Step 3 checksums one final time. **All six must still match.** If any public page changed during Tasks 3–11, that is a Critical finding — no public page should have been touched at all in this phase.
+Run `npm run fingerprint` one final time and diff against the Task 2 baseline. **All six must still match.** If any public page changed during Tasks 3–11, that is a Critical finding — no public page should have been touched at all in this phase.
 
 - [ ] **Step 6: Commit**
 
@@ -1470,7 +1472,7 @@ git commit -m "Brand the admin and cover it with the smoke test"
 - [ ] `npm run typecheck` passes
 - [ ] `npm run test` passes (YouTube parser, 8/8)
 - [ ] `npm run smoke` passes 18/18
-- [ ] The six public page checksums are unchanged from Task 1
+- [ ] `npm run fingerprint` output is unchanged from the Task 2 baseline
 - [ ] An Admin can log in at `/admin`, create an Editor, and that Editor cannot see Users or promote themselves
 - [ ] A large image uploads and is served resized as WebP; a PDF uploads unchanged
 - [ ] A News item can be saved as either a link-out or an on-site article, with the other type's fields hidden
