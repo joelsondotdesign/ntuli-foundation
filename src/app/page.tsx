@@ -76,7 +76,7 @@ export default function Home() {
           <img className="hero-sculpture" src="/assets/img/hero-sculpture.png" alt="Carved bone sculpture by Pitika Ntuli" />
           <div className="container" style={{ width: "100%" }}>
             <div className="hero-copy">
-              <h1 className="display">Living archives<br />ancestral voices<br />shared futures</h1>
+              <h1 className="display">Living archives<br /><em>ancestral voices</em><br />shared futures</h1>
               <p>Grounded in the philosophy of UBuSuSu, our work unfolds across the archive, studio, education, community, and global dialogue: intergenerational sites of living knowledge.</p>
               <Link className="btn btn-dark" href="/what-we-do">Explore our work</Link>
             </div>
@@ -143,7 +143,7 @@ export default function Home() {
               <div className="focus-card reveal">
                 <img src="/assets/img/focus-living-archives-photo.png" alt="A gathering among the sculptures and paintings in the studio" />
                 <h3>Living archives</h3>
-                <p>To preserve and digitise Professor Ntuli&rsquo;s work, establishing the studio as a primary archival and pedagogical site.</p>
+                <p>To preserve and digitise Professor Ntuli’s work, establishing the studio as a primary archival and pedagogical site.</p>
               </div>
               <div className="focus-card reveal">
                 <img src="/assets/img/focus-global-culture-photo.png" alt="Professor Pitika Ntuli speaking at a public event" />
