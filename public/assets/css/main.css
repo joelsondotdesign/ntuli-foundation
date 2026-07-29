@@ -130,8 +130,8 @@ h1, h2, h3 { font-weight: 600; color: var(--ink); line-height: 1.15; }
 }
 .nav.is-stuck .nav-inner { height: 76px; }
 .nav-inner { transition: height 0.35s ease; }
-body.hero-tinted { --nav-rest-bg: var(--bone-soft); }
-body.hero-bone { --nav-rest-bg: var(--bone); }
+.hero-tinted { --nav-rest-bg: var(--bone-soft); }
+.hero-bone { --nav-rest-bg: var(--bone); }
 .nav-inner {
   display: flex;
   align-items: center;
