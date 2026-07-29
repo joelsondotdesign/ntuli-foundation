@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 import SiteChrome from "@/components/SiteChrome";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "The studio | Ntuli Foundation",
   description:
     "One man's studio, a continent's memory room: visit the Ntuli studio at 146 10th Road, Kew, Johannesburg — walkthroughs by appointment.",
-  alternates: { canonical: "/studio" },
-  openGraph: {
-    title: "The studio | Ntuli Foundation",
-    description:
-      "One man's studio, a continent's memory room — visit the Ntuli studio in Kew, Johannesburg.",
-    url: "/studio",
-  },
-};
+  path: "/studio",
+  ogDescription:
+    "One man's studio, a continent's memory room — visit the Ntuli studio in Kew, Johannesburg.",
+});
 
 export default function Studio() {
   return (

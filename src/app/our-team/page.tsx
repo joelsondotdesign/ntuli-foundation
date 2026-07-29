@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 import SiteChrome from "@/components/SiteChrome";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Our team | Ntuli Foundation",
   description:
     "The keepers of the portal: Prof Pitika Ntuli, Antoinette Ntuli, and the team carrying the Ntuli Foundation's work across art, heritage and education.",
-  alternates: { canonical: "/our-team" },
-  openGraph: {
-    title: "Our team | Ntuli Foundation",
-    description:
-      "Prof Pitika Ntuli, Antoinette Ntuli, and the team carrying the Foundation's work across art, heritage and education.",
-    url: "/our-team",
-  },
-};
+  path: "/our-team",
+  ogDescription:
+    "Prof Pitika Ntuli, Antoinette Ntuli, and the team carrying the Foundation's work across art, heritage and education.",
+});
 
 export default function OurTeam() {
   return (

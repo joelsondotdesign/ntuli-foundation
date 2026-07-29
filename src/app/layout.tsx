@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE } from "@/lib/site";
+import { SITE, SITE_OPENGRAPH_DEFAULTS, SITE_TWITTER_DEFAULTS } from "@/lib/site";
 
 const THEME_SCRIPT = `try{var t=localStorage.getItem("ntuli-theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.setAttribute("data-theme","dark");}catch(e){}`;
 
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/site.webmanifest",
-  openGraph: { siteName: SITE.name, locale: "en_ZA", type: "website" },
-  twitter: { card: "summary_large_image" },
+  openGraph: SITE_OPENGRAPH_DEFAULTS,
+  twitter: SITE_TWITTER_DEFAULTS,
 };
 
 export const viewport = { themeColor: "#2B2926" };

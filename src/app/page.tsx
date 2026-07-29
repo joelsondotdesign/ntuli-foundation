@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SiteChrome from "@/components/SiteChrome";
-import { SITE } from "@/lib/site";
+import { SITE, pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Ntuli Foundation | Art, Philosophy & African Indigenous Knowledge",
   description:
     "The Ntuli Foundation advances African Indigenous Knowledge Systems through the art, poetry and philosophy of Prof Pitika Ntuli — a portal between past and future.",
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: "Ntuli Foundation | Art, Philosophy & African Indigenous Knowledge",
-    description:
-      "A living portal into African Indigenous Knowledge Systems — grounded in the sculpture, poetry and philosophy of Prof Pitika Ntuli.",
-    url: "/",
-    images: [{ url: "/assets/og/og-home.jpg", width: 1200, height: 630, alt: "The Ntuli Foundation portal mark — light passing through the reversed N" }],
-  },
-};
+  path: "/",
+  ogDescription:
+    "A living portal into African Indigenous Knowledge Systems — grounded in the sculpture, poetry and philosophy of Prof Pitika Ntuli.",
+  twitterDescription:
+    "A living portal into African Indigenous Knowledge Systems — grounded in the work of Prof Pitika Ntuli.",
+});
 
 export default function Home() {
   return (

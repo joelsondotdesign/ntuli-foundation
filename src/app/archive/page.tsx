@@ -2,19 +2,16 @@ import type { Metadata } from "next";
 import SiteChrome from "@/components/SiteChrome";
 import ArchiveGrid from "@/components/ArchiveGrid";
 import { ARCHIVE } from "@/data/archive";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Archive | Ntuli Foundation",
   description:
     "The living record: films, lectures, essays and published writing by Prof Pitika Ntuli, held and activated by the Ntuli Foundation.",
-  alternates: { canonical: "/archive" },
-  openGraph: {
-    title: "Archive | Ntuli Foundation",
-    description:
-      "Films, lectures, essays and published writing by Prof Pitika Ntuli — the Foundation's living record.",
-    url: "/archive",
-  },
-};
+  path: "/archive",
+  ogDescription:
+    "Films, lectures, essays and published writing by Prof Pitika Ntuli — the Foundation's living record.",
+});
 
 export default function Archive() {
   return (

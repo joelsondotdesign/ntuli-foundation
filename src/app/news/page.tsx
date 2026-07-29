@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
 import SiteChrome from "@/components/SiteChrome";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "News | Ntuli Foundation",
   description:
     "From the threshold: books, exhibitions and opinions from the Ntuli Foundation and the studio of Prof Pitika Ntuli.",
-  alternates: { canonical: "/news" },
-  openGraph: {
-    title: "News | Ntuli Foundation",
-    description:
-      "Books, exhibitions and opinions from the Ntuli Foundation and the studio of Prof Pitika Ntuli.",
-    url: "/news",
-  },
-};
+  path: "/news",
+  ogDescription:
+    "Books, exhibitions and opinions from the Ntuli Foundation and the studio of Prof Pitika Ntuli.",
+});
 
 export default function News() {
   return (
