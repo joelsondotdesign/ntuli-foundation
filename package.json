@@ -2,7 +2,9 @@
   "name": "ntuli-foundation",
   "version": "1.0.0",
   "private": true,
-  "engines": { "node": ">=20.9.0" },
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,10 +14,15 @@
     "fingerprint": "next build && node scripts/fingerprint.mjs"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "^3.86.0",
+    "@payloadcms/next": "^3.86.0",
+    "@payloadcms/richtext-lexical": "^3.86.0",
+    "graphql": "^16.14.2",
+    "gsap": "^3.12.5",
     "next": "^16.2.12",
+    "payload": "^3.86.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "gsap": "^3.12.5"
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
