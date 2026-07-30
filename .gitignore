@@ -11,3 +11,9 @@ npm-debug.log*
 next-env.d.ts
 .vercel
 tsconfig.tsbuildinfo
+
+# Local disk fallback for Payload media uploads (used when
+# BLOB_READ_WRITE_TOKEN isn't set, e.g. in local development).
+# In production, uploads go to Vercel Blob instead — this directory
+# is never the source of truth and must not be committed.
+/media/
