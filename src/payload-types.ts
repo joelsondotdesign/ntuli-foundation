@@ -277,11 +277,12 @@ export interface Event {
   id: number;
   title: string;
   /**
-   * Date and start time. The site shows the day and month, and hides the event once this has passed.
+   * Date and start time, in South African time. The site shows the day and month, and hides the event once this has passed.
    */
   startDate: string;
+  startDate_tz: 'Africa/Johannesburg';
   /**
-   * For example: 146 10th Road, Kew, Johannesburg
+   * The line that appears under the title. Usually the place — for example: 146 10th Road, Kew, Johannesburg — and you can add a short note after a · if it helps, for example: The teaching floor, Kew · Schools programme
    */
   location: string;
   /**
@@ -484,6 +485,7 @@ export interface NewsSelect<T extends boolean = true> {
 export interface EventsSelect<T extends boolean = true> {
   title?: T;
   startDate?: T;
+  startDate_tz?: T;
   location?: T;
   actionType?: T;
   actionLabel?: T;

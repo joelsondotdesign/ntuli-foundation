@@ -22,8 +22,33 @@ export const Events: CollectionConfig = {
       name: "startDate",
       type: "date",
       required: true,
+      /*
+       * Locked to South African time, deliberately.
+       *
+       * Without this, Payload stores a bare ISO UTC string and the conversion
+       * from the typed wall-clock time depends on whichever timezone the
+       * EDITOR'S BROWSER happened to be in. An editor typing "10:00" from
+       * Johannesburg stores 08:00Z; the same editor typing "10:00" from London
+       * in December, or over a VPN, stores 10:00Z — which reads back as 12:00
+       * SAST. Two hours of silent drift per event, with nothing in the stored
+       * data to detect it afterwards, and no error at any point.
+       *
+       * That matters here specifically because Phase 3 hides events by
+       * comparing startDate against now: an event drifted two hours late
+       * lingers on the site after it has finished, and one drifted early
+       * vanishes while it is still running.
+       *
+       * supportedTimezones deliberately has exactly one entry, so the picker
+       * is fixed rather than merely defaulted — an editor cannot pick another
+       * by accident. South Africa observes no daylight saving, so UTC+2 holds
+       * year-round and there is no seasonal case to get wrong.
+       */
+      timezone: {
+        defaultTimezone: "Africa/Johannesburg",
+        supportedTimezones: [{ label: "South Africa (SAST)", value: "Africa/Johannesburg" }],
+      },
       admin: {
-        description: "Date and start time. The site shows the day and month, and hides the event once this has passed.",
+        description: "Date and start time, in South African time. The site shows the day and month, and hides the event once this has passed.",
         date: { pickerAppearance: "dayAndTime", displayFormat: "d MMM yyyy, HH:mm" },
       },
     },
@@ -31,7 +56,9 @@ export const Events: CollectionConfig = {
       name: "location",
       type: "text",
       required: true,
-      admin: { description: "For example: 146 10th Road, Kew, Johannesburg" },
+      admin: {
+        description: "The line that appears under the title. Usually the place — for example: 146 10th Road, Kew, Johannesburg — and you can add a short note after a · if it helps, for example: The teaching floor, Kew · Schools programme",
+      },
     },
     {
       name: "actionType",
