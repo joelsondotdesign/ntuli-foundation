@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    news: News;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +79,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -201,6 +203,69 @@ export interface Media {
   };
 }
 /**
+ * Books, exhibitions, opinions and announcements. The newest published item is featured on the News page, and the newest three appear on the home page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  title: string;
+  /**
+   * Shown on the card, and used to order the list.
+   */
+  date: string;
+  /**
+   * Shown as the small label on the card.
+   */
+  category: 'book' | 'exhibition' | 'opinion' | 'interview' | 'announcement';
+  /**
+   * The thumbnail. Landscape images work best.
+   */
+  image: number | Media;
+  /**
+   * One or two sentences. Shown on the featured card and used as the page description in search results.
+   */
+  summary: string;
+  /**
+   * Choose 'elsewhere' for press coverage. Choose 'on this site' to write it yourself.
+   */
+  storyType: 'link' | 'article';
+  /**
+   * Paste the full web address of the article, including https://
+   */
+  linkUrl?: string | null;
+  /**
+   * The address this article will live at, e.g. palestine-in-my-heart. Filled in from the title if you leave it blank.
+   */
+  slug?: string | null;
+  /**
+   * The article itself.
+   */
+  body?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Also list this in the Archive. Use for writing that belongs in the permanent record, not for press mentions.
+   */
+  alsoInArchive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -231,6 +296,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -349,6 +418,25 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  category?: T;
+  image?: T;
+  summary?: T;
+  storyType?: T;
+  linkUrl?: T;
+  slug?: T;
+  body?: T;
+  alsoInArchive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
