@@ -13,7 +13,9 @@
     "typecheck": "tsc --noEmit",
     "smoke": "next build && node scripts/smoke.mjs",
     "fingerprint": "next build && node scripts/fingerprint.mjs",
-    "generate:types": "payload generate:types"
+    "generate:types": "payload generate:types",
+    "generate:importmap": "payload generate:importmap",
+    "check:generated": "node scripts/check-generated.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.86.0",

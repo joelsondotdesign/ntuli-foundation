@@ -66,6 +66,30 @@ try {
     if (res.status !== 200) fail(`${asset} returned ${res.status}`);
     else pass(asset);
   }
+
+  /* Basic reachability only. This deliberately does NOT claim to catch a stale
+     admin importMap: that failure surfaces as a server-side console error, not
+     in the status code or the rendered HTML, so no HTTP probe can see it —
+     tested, not assumed. `npm run check:generated` is what catches that. */
+  const admin = await fetch(`${BASE}/admin`, { redirect: "manual" });
+  if (![200, 302, 307].includes(admin.status)) {
+    fail(`/admin returned ${admin.status}`);
+  } else if (admin.status === 200) {
+    const html = await admin.text();
+    if (/not found in importMap/i.test(html)) {
+      fail("/admin renders an importMap error — run: npm run generate:importmap");
+    } else if (!/create-first-user|payload/i.test(html)) {
+      fail("/admin returned 200 but rendered no recognisable admin markup");
+    } else {
+      pass("/admin renders");
+    }
+  } else {
+    pass(`/admin redirects (${admin.status})`);
+  }
+
+  const api = await fetch(`${BASE}/api/users?depth=0`);
+  if (![200, 401, 403].includes(api.status)) fail(`/api/users returned ${api.status}`);
+  else pass("/api/users responds");
 } finally {
   // `next start` spawns its own worker process; killing only the `npx`
   // process it's spawned under can leave that worker holding port 3100
