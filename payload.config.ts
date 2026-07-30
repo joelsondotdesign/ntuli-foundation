@@ -8,6 +8,7 @@ import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
 import { Users } from "./src/collections/Users";
 import { Media } from "./src/collections/Media";
 import { News } from "./src/collections/News";
+import { Events } from "./src/collections/Events";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -15,7 +16,7 @@ export default buildConfig({
   admin: {
     user: "users",
   },
-  collections: [Users, Media, News],
+  collections: [Users, Media, News, Events],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   sharp,

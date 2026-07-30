@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     news: News;
+    events: Event;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -266,6 +268,39 @@ export interface News {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Events shown on the home page. Anything whose date has passed drops off the site automatically — you do not need to delete it.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  title: string;
+  /**
+   * Date and start time. The site shows the day and month, and hides the event once this has passed.
+   */
+  startDate: string;
+  /**
+   * For example: 146 10th Road, Kew, Johannesburg
+   */
+  location: string;
+  /**
+   * What appears at the end of the row.
+   */
+  actionType: 'button' | 'label' | 'none';
+  /**
+   * For example: Book a place, Apply, or By invitation
+   */
+  actionLabel?: string | null;
+  /**
+   * Where the button goes. An email address works too — write it as mailto:info@ntulifoundation.org
+   */
+  actionUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -300,6 +335,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'news';
         value: number | News;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -434,6 +473,21 @@ export interface NewsSelect<T extends boolean = true> {
   slug?: T;
   body?: T;
   alsoInArchive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  title?: T;
+  startDate?: T;
+  location?: T;
+  actionType?: T;
+  actionLabel?: T;
+  actionUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
