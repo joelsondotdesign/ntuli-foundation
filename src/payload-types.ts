@@ -322,11 +322,11 @@ export interface Archive {
    */
   youtubeUrl?: string | null;
   /**
-   * Optional. The address of an Instagram reel.
+   * Optional. The address of an Instagram reel. Used only if there is no YouTube address above.
    */
   instagramUrl?: string | null;
   /**
-   * Optional for videos — if you leave it blank, the thumbnail comes from YouTube automatically.
+   * The picture shown on the card. Optional for a video with a YouTube address — leave it blank and the thumbnail is taken from YouTube automatically.
    */
   image?: (number | null) | Media;
   description?: {

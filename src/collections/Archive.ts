@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 import { parseYouTube } from "@/lib/youtube";
+import { parseInstagram } from "@/lib/instagram";
 
 export const Archive: CollectionConfig = {
   slug: "archive",
@@ -51,7 +52,11 @@ export const Archive: CollectionConfig = {
       type: "text",
       admin: {
         condition: (_, siblingData) => siblingData?.type === "video",
-        description: "Optional. The address of an Instagram reel.",
+        description: "Optional. The address of an Instagram reel. Used only if there is no YouTube address above.",
+      },
+      validate: (value: string | null | undefined) => {
+        if (!value) return true;
+        return parseInstagram(value) ? true : "That does not look like an Instagram address. Copy it from your browser's address bar — it should contain instagram.com";
       },
     },
     {
@@ -59,7 +64,7 @@ export const Archive: CollectionConfig = {
       type: "upload",
       relationTo: "media",
       admin: {
-        description: "Optional for videos — if you leave it blank, the thumbnail comes from YouTube automatically.",
+        description: "The picture shown on the card. Optional for a video with a YouTube address — leave it blank and the thumbnail is taken from YouTube automatically.",
       },
     },
     { name: "description", type: "richText" },
@@ -98,41 +103,68 @@ export const Archive: CollectionConfig = {
   ],
   hooks: {
     /*
-     * type, youtubeUrl and image are each resolved as `data?.x ?? originalDoc?.x`
-     * rather than read straight off `data`, on the same principle behind the
-     * News (storyType) fix: a PATCH need not resend every field, and a
-     * collection-level beforeChange that branches on `data.x` alone assumes
-     * it always will.
+     * Every field below is read straight off `data`, with NO
+     * `?? originalDoc?.x` fallback. That is deliberate, and it is the opposite
+     * of what it looks like, so it is worth stating why.
      *
-     * Verified rather than assumed, and worth recording precisely: on this
-     * Payload version (3.86.0), reading `data.x` directly here turns out NOT
-     * to reproduce the News bug for these three fields. Before the
+     * A partial PATCH does not need the fallback here. Before this
      * collection-level beforeChange runs, Payload's own field-level
-     * beforeValidate traversal already backfills any omitted top-level field
-     * from originalDoc into `data`/`siblingData` — see
+     * beforeValidate traversal already backfills every named field that the
+     * request OMITTED from originalDoc into `data` — see
      * node_modules/payload/dist/fields/hooks/beforeValidate/promise.js
-     * (getFallbackValue → cloneDataFromOriginalDoc). Confirmed with a live
-     * A/B test: a PATCH of `{ youtubeUrl: "..." }` alone against the literal
-     * brief hook (`data.type` read directly, no fallback) still updated
-     * `embed` correctly, and a PATCH of `{ type: "writing" }` alone still
-     * cleared `embed`/`thumbnailUrl` correctly — both probes below pass
-     * identically whether or not this fallback is present.
+     * (getFallbackValue → cloneDataFromOriginalDoc). So `data.type` on a PATCH
+     * that never mentioned `type` is already the stored value. Verified by
+     * A/B test, not assumed.
      *
-     * The fallback is kept anyway: it is harmless, makes the hook correct by
-     * construction rather than by an internal merge step this file does not
-     * control, and matches the News precedent so the two collections read
-     * the same way. But it is not, here, closing a reproduced gap — the
-     * News comment this was modelled on should not be read as implying it
-     * always is.
+     * Adding `?? originalDoc?.x` on top of that is not merely redundant — for
+     * `image` it is an ACTIVE BUG, which is how it was found. `??` cannot tell
+     * "field absent" from "field explicitly set to null", but Payload can and
+     * does: clearing an upload field sends a real `null`, which the sanitizer
+     * preserves rather than backfilling. So `data.image ?? originalDoc.image`
+     * resurrects the just-removed image, `thumbnailUrl` is computed as though
+     * a picture were still attached, and it stays null instead of reverting to
+     * the YouTube thumbnail. Measured: attach image -> thumbnailUrl null
+     * (correct); remove image -> thumbnailUrl STILL null (wrong, should be the
+     * YouTube URL again). Reading `data.image` directly gets all three cases
+     * right — set, cleared, and omitted — because Payload has already resolved
+     * the distinction the fallback would destroy.
      */
     beforeChange: [
-      ({ data, originalDoc }) => {
-        const type = data?.type ?? originalDoc?.type;
-        const youtubeUrl = data?.youtubeUrl ?? originalDoc?.youtubeUrl;
-        const image = data?.image ?? originalDoc?.image;
-        const ref = type === "video" && youtubeUrl ? parseYouTube(youtubeUrl) : null;
-        data.embed = ref ? { provider: "youtube", ...ref } : null;
-        data.thumbnailUrl = ref && !image ? `https://i.ytimg.com/vi/${ref.id}/hqdefault.jpg` : null;
+      ({ data }) => {
+        /*
+         * Clear the inapplicable side of the video/writing choice, so a
+         * document can never carry both shapes at once. Same guarantee, and
+         * same reasoning, as the News collection's storyType hook: without
+         * this, switching an entry from Video to Writing leaves its old
+         * youtubeUrl/instagramUrl in the record, hidden from the editor by the
+         * field conditions but still visible to Phase 3 — which is exactly the
+         * stale-field trap that presence-based rendering falls into.
+         */
+        if (data.type === "writing") {
+          data.youtubeUrl = null;
+          data.instagramUrl = null;
+        } else if (data.type === "video") {
+          data.pdf = null;
+        }
+
+        // YouTube wins when both addresses are present; Instagram is the
+        // fallback so an Instagram-only entry still produces a usable embed
+        // rather than silently rendering nothing.
+        const youtube = data.type === "video" && data.youtubeUrl ? parseYouTube(data.youtubeUrl) : null;
+        const instagram = !youtube && data.type === "video" && data.instagramUrl ? parseInstagram(data.instagramUrl) : null;
+
+        if (youtube) {
+          data.embed = { provider: "youtube", ...youtube };
+        } else if (instagram) {
+          data.embed = { provider: "instagram", url: instagram };
+        } else {
+          data.embed = null;
+        }
+
+        // Only YouTube supplies an automatic thumbnail; Instagram has no
+        // equivalent public still, so an Instagram-only entry needs its own
+        // uploaded image.
+        data.thumbnailUrl = youtube && !data.image ? `https://i.ytimg.com/vi/${youtube.id}/hqdefault.jpg` : null;
         return data;
       },
     ],

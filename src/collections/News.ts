@@ -57,9 +57,23 @@ export const News: CollectionConfig = {
      * which a presence check would have emitted as a live href. The reverse
      * left a stale slug still occupying the unique index, plus an orphaned body.
      *
-     * storyType falls back to originalDoc because a PATCH need not resend it;
-     * without that fallback a partial update would skip both branches and let
-     * the stale value survive.
+     * The `?? originalDoc?.storyType` fallback below is DEFENSIVE, not
+     * load-bearing — an earlier version of this comment claimed a partial
+     * PATCH would otherwise skip both branches, and that was wrong. Payload's
+     * field-level beforeValidate traversal already backfills any field the
+     * request omitted from originalDoc into `data` before this hook runs (see
+     * payload/dist/fields/hooks/beforeValidate/promise.js, getFallbackValue →
+     * cloneDataFromOriginalDoc), so `data.storyType` is already populated.
+     * Verified by A/B test against a build without the fallback.
+     *
+     * The real bug this hook fixes is the absence of any clearing logic at
+     * all, not a missing fallback. Keeping it is harmless here because
+     * storyType is a required radio that is never explicitly nulled — but note
+     * that `??` cannot distinguish "omitted" from "explicitly set to null", so
+     * this pattern must NOT be copied onto a field an editor can clear (an
+     * upload, say). Doing exactly that to Archive's `image` resurrected a
+     * just-removed image and suppressed its automatic thumbnail; see the
+     * comment on Archive's beforeChange hook.
      */
     beforeChange: [
       ({ data, originalDoc }) => {
