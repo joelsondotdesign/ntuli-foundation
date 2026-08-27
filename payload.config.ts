@@ -10,6 +10,7 @@ import { Media } from "./src/collections/Media";
 import { News } from "./src/collections/News";
 import { Events } from "./src/collections/Events";
 import { Archive } from "./src/collections/Archive";
+import { SiteSettings } from "./src/globals/SiteSettings";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -18,6 +19,7 @@ export default buildConfig({
     user: "users",
   },
   collections: [Users, Media, News, Events, Archive],
+  globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   sharp,

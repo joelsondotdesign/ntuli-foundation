@@ -93,8 +93,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -627,6 +631,75 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: number;
+  email: string;
+  /**
+   * As you want it shown, e.g. +27 83 459 3423
+   */
+  phone: string;
+  /**
+   * e.g. 146 10th Road, Kew
+   */
+  addressLine1: string;
+  /**
+   * e.g. Johannesburg, South Africa
+   */
+  addressLine2: string;
+  x?: string | null;
+  instagram?: string | null;
+  youtube?: string | null;
+  facebook?: string | null;
+  linkedin?: string | null;
+  /**
+   * The short paragraph under the logo.
+   */
+  blurb: string;
+  /**
+   * The italic line at the bottom, e.g. I am because we are.
+   */
+  motto: string;
+  /**
+   * e.g. Letters from the threshold
+   */
+  newsletterLabel: string;
+  /**
+   * This also hides itself automatically whenever there are no events still to come.
+   */
+  showHomeEvents?: boolean | null;
+  showHomeNews?: boolean | null;
+  showCookieNotice?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  email?: T;
+  phone?: T;
+  addressLine1?: T;
+  addressLine2?: T;
+  x?: T;
+  instagram?: T;
+  youtube?: T;
+  facebook?: T;
+  linkedin?: T;
+  blurb?: T;
+  motto?: T;
+  newsletterLabel?: T;
+  showHomeEvents?: T;
+  showHomeNews?: T;
+  showCookieNotice?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
