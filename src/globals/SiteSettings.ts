@@ -24,6 +24,20 @@ export const SiteSettings: GlobalConfig = {
         {
           label: "Social",
           description: "Leave any of these blank and its icon simply will not appear on the site.",
+          /*
+           * A blank social URL arrives as EITHER null or "" — both are live states:
+           *   null  — never filled in, or explicitly cleared via the API
+           *   ""    — filled in, then cleared in the admin. Clearing a text input
+           *           sets the form value to e.target.value (""), and nothing in
+           *           the write path normalises that to null before it persists.
+           *
+           * The "" case is the likelier one in practice, because it is what the
+           * client does. So Phase 3 must treat both as blank — use a truthiness
+           * (or trimmed-length) check, never `!== null`. A `!== null` check passes
+           * every test we have and then renders an icon linking nowhere the first
+           * time someone clears Facebook through the admin. Verified by writing ""
+           * and reading it back: it stays "".
+           */
           fields: [
             { name: "x", type: "text", label: "X (Twitter)" },
             { name: "instagram", type: "text" },
