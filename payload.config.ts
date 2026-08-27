@@ -17,6 +17,16 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 export default buildConfig({
   admin: {
     user: "users",
+    meta: {
+      titleSuffix: " · Ntuli Foundation",
+      icons: [{ url: "/assets/img/favicon.png" }],
+    },
+    components: {
+      graphics: {
+        Logo: "/src/components/admin/Logo.tsx#default",
+        Icon: "/src/components/admin/Icon.tsx#default",
+      },
+    },
   },
   collections: [Users, Media, News, Events, Archive],
   globals: [SiteSettings],
