@@ -9,6 +9,7 @@ import { Users } from "./src/collections/Users";
 import { Media } from "./src/collections/Media";
 import { News } from "./src/collections/News";
 import { Events } from "./src/collections/Events";
+import { Archive } from "./src/collections/Archive";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -16,7 +17,7 @@ export default buildConfig({
   admin: {
     user: "users",
   },
-  collections: [Users, Media, News, Events],
+  collections: [Users, Media, News, Events, Archive],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   sharp,

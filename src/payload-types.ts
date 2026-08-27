@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     news: News;
     events: Event;
+    archive: Archive;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +83,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    archive: ArchiveSelect<false> | ArchiveSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -302,6 +304,73 @@ export interface Event {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Films, lectures, essays and published writing. Videos and writing are filtered separately on the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "archive".
+ */
+export interface Archive {
+  id: number;
+  type: 'video' | 'writing';
+  title: string;
+  /**
+   * The small line under the title. For example: 2026 · Poetry collection · Botsotso
+   */
+  creditLine?: string | null;
+  /**
+   * Paste the whole address from the YouTube page, including any start time. For example: https://www.youtube.com/watch?v=EQwz7M7ZlqM&t=44s
+   */
+  youtubeUrl?: string | null;
+  /**
+   * Optional. The address of an Instagram reel.
+   */
+  instagramUrl?: string | null;
+  /**
+   * Optional for videos — if you leave it blank, the thumbnail comes from YouTube automatically.
+   */
+  image?: (number | null) | Media;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Optional. Adds an 'Open the PDF' button.
+   */
+  pdf?: (number | null) | Media;
+  /**
+   * Optional. A link out — to a bookshop, gallery or publication.
+   */
+  linkUrl?: string | null;
+  /**
+   * The words on the button. For example: View the book
+   */
+  linkLabel?: string | null;
+  embed?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  thumbnailUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -340,6 +409,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'events';
         value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'archive';
+        value: number | Archive;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -490,6 +563,27 @@ export interface EventsSelect<T extends boolean = true> {
   actionType?: T;
   actionLabel?: T;
   actionUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "archive_select".
+ */
+export interface ArchiveSelect<T extends boolean = true> {
+  type?: T;
+  title?: T;
+  creditLine?: T;
+  youtubeUrl?: T;
+  instagramUrl?: T;
+  image?: T;
+  description?: T;
+  pdf?: T;
+  linkUrl?: T;
+  linkLabel?: T;
+  embed?: T;
+  thumbnailUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
